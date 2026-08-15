@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "oryvexclient",
+    "name": "OryvexClient",
+    "description": "Advanced modern cheat client for Minecraft 1.8.9",
+    "version": "1.0.0",
+    "mcversion": "1.8.9",
+    "url": "",
+    "updateUrl": "",
+    "authors": ["Oryvex"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
