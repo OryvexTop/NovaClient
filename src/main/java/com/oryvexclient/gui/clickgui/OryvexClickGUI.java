@@ -1,15 +1,14 @@
 package com.oryvexclient.gui.clickgui;
 
+import com.oryvexclient.gui.clickgui.OryvexClient;
 import com.oryvexclient.gui.clickgui.modules.Category;
 import com.oryvexclient.gui.clickgui.modules.Module;
 import com.oryvexclient.gui.clickgui.modules.ModuleManager;
-import com.oryvexclient.gui.clickgui.OryvexClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,29 +35,21 @@ public class OryvexClickGUI extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
-        // nothing
-    }
-
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
-
         for (CategoryPanel panel : panels) {
             panel.draw(mouseX, mouseY);
         }
-
         if (waitingForKeyModule != null) {
             drawCenteredString(mc.fontRendererObj, "Press a key for " + waitingForKeyModule.getName() + "...", width / 2, height / 2 - 10, 0xFFFF00);
         }
-
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (waitingForKeyModule != null) {
-            int key = mouseButton == 0 ? Keyboard.KEY_NONE : Keyboard.getEventKey();
+            int key = Keyboard.getEventKey();
             if (key == Keyboard.KEY_ESCAPE) key = Keyboard.KEY_NONE;
             waitingForKeyModule.setKeybind(key);
             OryvexClient.getInstance().getKeybindManager().registerBind(waitingForKeyModule);
@@ -68,11 +59,11 @@ public class OryvexClickGUI extends GuiScreen {
         }
 
         for (CategoryPanel panel : panels) {
-            if (panel.isMouseOver(mouseX, mouseY)) {
+            if (panel.isMouseOverHeader(mouseX, mouseY)) {
                 draggingPanel = panel;
                 dragX = mouseX - panel.x;
                 dragY = mouseY - panel.y;
-                break;
+                return;
             }
             if (panel.mouseClicked(mouseX, mouseY, mouseButton)) {
                 return;
@@ -120,12 +111,12 @@ public class OryvexClickGUI extends GuiScreen {
         waitingForKeyModule = module;
     }
 
-    // ---- Inner class: Category Panel ----
+    // Inner panel class
     private class CategoryPanel {
         private final Category category;
         private int x, y;
         private boolean open = true;
-        private List<Module> modules = new ArrayList<>();
+        private final List<Module> modules = new ArrayList<>();
 
         CategoryPanel(Category category, int x, int y) {
             this.category = category;
@@ -141,18 +132,17 @@ public class OryvexClickGUI extends GuiScreen {
             }
         }
 
-        boolean isMouseOver(int mouseX, int mouseY) {
+        boolean isMouseOverHeader(int mouseX, int mouseY) {
             return mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= y && mouseY <= y + PANEL_HEIGHT;
         }
 
         boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
-            if (isMouseOver(mouseX, mouseY)) {
+            if (isMouseOverHeader(mouseX, mouseY)) {
                 if (mouseButton == 0) {
                     open = !open;
                 }
                 return true;
             }
-
             if (open) {
                 int moduleY = y + PANEL_HEIGHT + 2;
                 for (Module module : modules) {
@@ -161,7 +151,6 @@ public class OryvexClickGUI extends GuiScreen {
                         if (mouseButton == 0) {
                             module.toggle();
                         } else if (mouseButton == 1) {
-                            // Start keybind assignment
                             setWaitingForKey(module);
                         }
                         return true;
@@ -173,12 +162,9 @@ public class OryvexClickGUI extends GuiScreen {
         }
 
         void draw(int mouseX, int mouseY) {
-            // Panel header
-            drawRect(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, new Color(20, 20, 20, 220).getRGB());
+            drawRect(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, 0xFF141414);
             String title = category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase();
             mc.fontRendererObj.drawStringWithShadow(title, x + 5, y + 5, 0x00AAFF);
-
-            // Toggle arrow
             String arrow = open ? "-" : "+";
             mc.fontRendererObj.drawStringWithShadow(arrow, x + PANEL_WIDTH - 10, y + 5, 0xFFFFFF);
 
@@ -187,13 +173,12 @@ public class OryvexClickGUI extends GuiScreen {
                 for (Module module : modules) {
                     int rowHeight = 16;
                     boolean hovered = mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= moduleY && mouseY <= moduleY + rowHeight;
-                    int bgColor = hovered ? new Color(40, 40, 40, 220).getRGB() : new Color(30, 30, 30, 220).getRGB();
+                    int bgColor = hovered ? 0xFF282828 : 0xFF1E1E1E;
                     drawRect(x, moduleY, x + PANEL_WIDTH, moduleY + rowHeight, bgColor);
 
                     int textColor = module.isToggled() ? 0x00FF00 : 0xFF5555;
                     mc.fontRendererObj.drawStringWithShadow(module.getName(), x + 5, moduleY + 4, textColor);
 
-                    // Keybind display
                     String keyName = module.getKeybind() == Keyboard.KEY_NONE ? "NONE" : Keyboard.getKeyName(module.getKeybind());
                     int keyWidth = mc.fontRendererObj.getStringWidth(keyName);
                     mc.fontRendererObj.drawStringWithShadow(keyName, x + PANEL_WIDTH - keyWidth - 5, moduleY + 4, 0xCCCCCC);

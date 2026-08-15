@@ -41,7 +41,6 @@ public class OryvexClient {
         MinecraftForge.EVENT_BUS.register(moduleManager);
         MinecraftForge.EVENT_BUS.register(guiManager);
 
-        // Change window title
         Display.setTitle("OryvexClient v1.0");
 
         System.out.println("[OryvexClient] PreInit complete.");
@@ -56,9 +55,6 @@ public class OryvexClient {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             keybindManager.checkKeybinds();
-            if (Minecraft.getMinecraft().thePlayer != null) {
-                commandManager.handleChatCommands();
-            }
         }
     }
 

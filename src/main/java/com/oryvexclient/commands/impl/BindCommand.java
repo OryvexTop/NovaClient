@@ -1,6 +1,6 @@
 package com.oryvexclient.commands.impl;
 
-import OryvexClient.OryvexClient;
+import com.oryvexclient.commands.impl.OryvexClient;
 import com.oryvexclient.commands.impl.commands.Command;
 import com.oryvexclient.commands.impl.modules.Module;
 import org.lwjgl.input.Keyboard;
@@ -12,19 +12,15 @@ public class BindCommand extends Command {
 
     private static final Map<String, Integer> KEY_ALIASES = new HashMap<>();
     static {
-        // Letters
         for (int i = Keyboard.KEY_A; i <= Keyboard.KEY_Z; i++) {
             KEY_ALIASES.put(Keyboard.getKeyName(i).toLowerCase(), i);
         }
-        // Numbers
         for (int i = Keyboard.KEY_0; i <= Keyboard.KEY_9; i++) {
             KEY_ALIASES.put(Keyboard.getKeyName(i).toLowerCase(), i);
         }
-        // F1-F12
         for (int i = Keyboard.KEY_F1; i <= Keyboard.KEY_F12; i++) {
             KEY_ALIASES.put(Keyboard.getKeyName(i).toLowerCase(), i);
         }
-        // Special keys
         KEY_ALIASES.put("rshift", Keyboard.KEY_RSHIFT);
         KEY_ALIASES.put("lshift", Keyboard.KEY_LSHIFT);
         KEY_ALIASES.put("shift", Keyboard.KEY_LSHIFT);

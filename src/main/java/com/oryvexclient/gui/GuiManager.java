@@ -1,6 +1,6 @@
 package com.oryvexclient.gui;
 
-import com.oryvexclient.gui.clickgui.OryvexClickGUI;
+import com.oryvexclient.gui.gui.clickgui.OryvexClickGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -11,9 +11,8 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiManager {
 
-    private boolean guiOpen = false;
-    private Minecraft mc = Minecraft.getMinecraft();
-    private OryvexClickGUI clickGUI;
+    private final Minecraft mc = Minecraft.getMinecraft();
+    private final OryvexClickGUI clickGUI;
 
     public GuiManager() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -22,7 +21,6 @@ public class GuiManager {
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
-        // Replace main menu with OryvexMainMenu
         if (event.gui instanceof GuiMainMenu) {
             event.gui = new OryvexMainMenu();
         }
@@ -35,21 +33,10 @@ public class GuiManager {
 
         // Toggle ClickGUI with Right Shift
         if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-            if (!guiOpen) {
-                openGUI();
-                guiOpen = true;
-            }
-        } else {
-            if (guiOpen && mc.currentScreen != clickGUI) {
-                guiOpen = false;
+            if (mc.currentScreen == null) {
+                mc.displayGuiScreen(clickGUI);
             }
         }
-
-        // Toggle ClickGUI via command or other means
-    }
-
-    public void openGUI() {
-        mc.displayGuiScreen(clickGUI);
     }
 
     public void toggleGUI() {

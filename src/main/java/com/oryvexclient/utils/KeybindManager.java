@@ -13,7 +13,6 @@ public class KeybindManager {
     private long lastPressTime = 0;
 
     public KeybindManager() {
-        // Binds are registered automatically when a module is created
         for (Module module : OryvexClient.getInstance().getModuleManager().getModules()) {
             if (module.getKeybind() != Keyboard.KEY_NONE) binds.add(module);
         }

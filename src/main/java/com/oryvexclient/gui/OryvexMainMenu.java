@@ -1,22 +1,18 @@
 package com.oryvexclient.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiMultiplayer;
-import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
-
-import java.awt.*;
 
 public class OryvexMainMenu extends GuiScreen {
 
     private static final int BUTTON_WIDTH = 200;
     private static final int BUTTON_HEIGHT = 20;
-    private static final int BACKGROUND_COLOR = new Color(10, 10, 10, 255).getRGB();
-    private static final int ACCENT_COLOR = new Color(0, 150, 255, 255).getRGB();
+    private static final int BACKGROUND_COLOR = 0xFF0A0A0A;
+    private static final int ACCENT_COLOR = 0x0096FF;
 
     @Override
     public void initGui() {
@@ -41,7 +37,7 @@ public class OryvexMainMenu extends GuiScreen {
             boolean hovered = mouseX >= button.xPosition && mouseX <= button.xPosition + button.width &&
                               mouseY >= button.yPosition && mouseY <= button.yPosition + button.height;
             if (hovered) {
-                drawRect(button.xPosition, button.yPosition, button.xPosition + button.width, button.yPosition + button.height, new Color(0, 150, 255, 60).getRGB());
+                drawRect(button.xPosition, button.yPosition, button.xPosition + button.width, button.yPosition + button.height, 0x330096FF);
             }
             button.drawButton(this.mc, mouseX, mouseY);
         }

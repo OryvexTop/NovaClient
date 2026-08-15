@@ -78,14 +78,6 @@ if [ "$(uname)" = "CYGWIN" ] || [ "$(uname)" = "MSYS" ] && [ "$OSTYPE" != "darwi
 
     JAVACMD=$( cygpath --unix "$JAVACMD" )
 
-    # Now convert the arguments - we need a way to do this portably
-    # To quote once, we can use xargs, but we need to handle quoting properly.
-    # Instead we use a trick: we set IFS to space and use the * expansion.
-    # The shell will expand each argument, then we can re-quote them.
-    # However, we also need to handle arguments that contain spaces.
-    # We'll use the standard approach: use "$@" and then quote them.
-    # This works as long as we don't use IFS to split.
-    # We'll use set -- to store the arguments.
     set -- "$@"
 fi
 

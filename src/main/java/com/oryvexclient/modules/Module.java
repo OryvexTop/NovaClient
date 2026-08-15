@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 
 public abstract class Module {
 
-    protected static Minecraft mc = Minecraft.getMinecraft();
+    protected static final Minecraft mc = Minecraft.getMinecraft();
 
     private final String name;
     private String displayName;

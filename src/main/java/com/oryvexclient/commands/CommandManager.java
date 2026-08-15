@@ -31,16 +31,6 @@ public class CommandManager {
         sendMessage("Unknown command. Use .bind [module] [key]");
     }
 
-    public void handleChatCommands() {
-        // This method is called every tick; we could check if a message was sent
-        // but for simplicity we will not intercept chat here.
-        // The player can use the command by typing in chat; Forge sends chat events,
-        // but we haven't registered a chat handler. Instead, we can listen to ClientChatReceivedEvent
-        // but that's for incoming messages. For outgoing commands, we would need to use
-        // a mixin or GuiChat hook. For this version, we'll skip automatic chat command execution
-        // and rely on a manual command execution if needed.
-    }
-
     public void sendMessage(String message) {
         if (mc.thePlayer != null) {
             mc.thePlayer.addChatComponentMessage(new ChatComponentText(

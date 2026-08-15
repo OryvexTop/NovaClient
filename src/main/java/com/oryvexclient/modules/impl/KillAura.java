@@ -58,7 +58,6 @@ public class KillAura extends Module {
         return entities.stream()
             .filter(e -> e instanceof EntityLivingBase)
             .filter(e -> e != mc.thePlayer)
-            .filter(e -> e instanceof EntityLivingBase && ((EntityLivingBase) e).isEntityAlive())
             .filter(e -> !(e instanceof EntityPlayer) || onlyPlayers ? e instanceof EntityPlayer : true)
             .filter(e -> throughWalls || mc.thePlayer.canEntityBeSeen(e))
             .min(Comparator.comparingDouble(e -> e.getDistanceToEntity(mc.thePlayer)))
