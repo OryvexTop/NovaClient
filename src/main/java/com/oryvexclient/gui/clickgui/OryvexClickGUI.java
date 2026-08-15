@@ -164,7 +164,6 @@ public class OryvexClickGUI extends GuiScreen {
         }
 
         void draw(int mouseX, int mouseY) {
-            // Header
             drawRect(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, HEADER_COLOR);
             String title = category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase();
             mc.fontRendererObj.drawStringWithShadow(title, x + 5, y + 5, ACCENT);

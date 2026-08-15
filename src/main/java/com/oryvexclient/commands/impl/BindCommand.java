@@ -13,7 +13,6 @@ public class BindCommand extends Command {
     private static final Map<String, Integer> KEY_ALIASES = new HashMap<>();
 
     static {
-        // Letters A-Z
         for (char c = 'A'; c <= 'Z'; c++) {
             String name = String.valueOf(c);
             int code = Keyboard.getKeyIndex(name);
@@ -21,7 +20,6 @@ public class BindCommand extends Command {
                 KEY_ALIASES.put(name.toLowerCase(), code);
             }
         }
-        // Numbers 0-9
         for (char c = '0'; c <= '9'; c++) {
             String name = String.valueOf(c);
             int code = Keyboard.getKeyIndex(name);
@@ -29,7 +27,6 @@ public class BindCommand extends Command {
                 KEY_ALIASES.put(name, code);
             }
         }
-        // F1-F12
         for (int i = 1; i <= 12; i++) {
             String name = "F" + i;
             int code = Keyboard.getKeyIndex(name);
@@ -38,7 +35,6 @@ public class BindCommand extends Command {
             }
         }
 
-        // Special keys
         addKey("rshift", Keyboard.KEY_RSHIFT);
         addKey("lshift", Keyboard.KEY_LSHIFT);
         addKey("shift", Keyboard.KEY_LSHIFT);

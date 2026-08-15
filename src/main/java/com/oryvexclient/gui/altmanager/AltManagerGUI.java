@@ -1,5 +1,6 @@
 package com.oryvexclient.gui.altmanager;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -7,7 +8,6 @@ import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,6 @@ public class AltManagerGUI extends GuiScreen {
 
     public AltManagerGUI(GuiScreen parent) {
         this.parent = parent;
-        // Load alts from file later
     }
 
     @Override
@@ -82,15 +81,8 @@ public class AltManagerGUI extends GuiScreen {
     }
 
     private void setSessionUsername(String name) {
-        try {
-            Field f = Minecraft.class.getDeclaredField("field_71449_j"); // session
-            f.setAccessible(true);
-            Session session = new Session(name, "0", "0", "mojang");
-            f.set(mc, session);
-            System.out.println("Session changed to " + name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mc.setSession(new Session(name, "0", "0", "mojang"));
+        System.out.println("Session changed to " + name);
     }
 
     @Override
