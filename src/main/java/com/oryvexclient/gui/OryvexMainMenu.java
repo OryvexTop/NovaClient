@@ -5,13 +5,11 @@ import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
-import net.minecraft.client.resources.I18n;
 
 public class OryvexMainMenu extends GuiScreen {
 
     private static final int BUTTON_WIDTH = 200;
     private static final int BUTTON_HEIGHT = 20;
-    private static final int BACKGROUND_COLOR = 0xFF0A0A0A;
     private static final int ACCENT_COLOR = 0x0096FF;
 
     @Override

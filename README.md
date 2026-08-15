@@ -16,7 +16,7 @@
 - **Chat command:** `.bind [module] [key]`
 
 ## Installation
-1. Download the built `.jar` from GitHub Actions artifacts.
+1. Download the **main jar** (`OryvexClient-1.0.0.jar`) from GitHub Actions artifacts. **Do not place the `-sources.jar` in the mods folder**; it is not a mod and may cause warnings.
 2. Place it in `.minecraft/mods`.
 3. Launch Minecraft Forge 1.8.9.
 
@@ -24,7 +24,7 @@
 ```bash
 ./gradlew build
 ```
-Output in `build/libs/`.
+Output in `build/libs/`. Only use the file without `-sources` as a mod.
 
 ## Important
 - For educational purposes only.

@@ -11,42 +11,66 @@ import java.util.Map;
 public class BindCommand extends Command {
 
     private static final Map<String, Integer> KEY_ALIASES = new HashMap<>();
+
     static {
-        for (int i = Keyboard.KEY_A; i <= Keyboard.KEY_Z; i++) {
-            KEY_ALIASES.put(Keyboard.getKeyName(i).toLowerCase(), i);
+        // Letters A-Z
+        for (char c = 'A'; c <= 'Z'; c++) {
+            String name = String.valueOf(c);
+            int code = Keyboard.getKeyIndex(name);
+            if (code != Keyboard.KEY_NONE) {
+                KEY_ALIASES.put(name.toLowerCase(), code);
+            }
         }
-        for (int i = Keyboard.KEY_0; i <= Keyboard.KEY_9; i++) {
-            KEY_ALIASES.put(Keyboard.getKeyName(i).toLowerCase(), i);
+        // Numbers 0-9
+        for (char c = '0'; c <= '9'; c++) {
+            String name = String.valueOf(c);
+            int code = Keyboard.getKeyIndex(name);
+            if (code != Keyboard.KEY_NONE) {
+                KEY_ALIASES.put(name, code);
+            }
         }
-        for (int i = Keyboard.KEY_F1; i <= Keyboard.KEY_F12; i++) {
-            KEY_ALIASES.put(Keyboard.getKeyName(i).toLowerCase(), i);
+        // F1-F12
+        for (int i = 1; i <= 12; i++) {
+            String name = "F" + i;
+            int code = Keyboard.getKeyIndex(name);
+            if (code != Keyboard.KEY_NONE) {
+                KEY_ALIASES.put(name.toLowerCase(), code);
+            }
         }
-        KEY_ALIASES.put("rshift", Keyboard.KEY_RSHIFT);
-        KEY_ALIASES.put("lshift", Keyboard.KEY_LSHIFT);
-        KEY_ALIASES.put("shift", Keyboard.KEY_LSHIFT);
-        KEY_ALIASES.put("rctrl", Keyboard.KEY_RCONTROL);
-        KEY_ALIASES.put("lctrl", Keyboard.KEY_LCONTROL);
-        KEY_ALIASES.put("ctrl", Keyboard.KEY_LCONTROL);
-        KEY_ALIASES.put("ralt", Keyboard.KEY_RMENU);
-        KEY_ALIASES.put("lalt", Keyboard.KEY_LMENU);
-        KEY_ALIASES.put("alt", Keyboard.KEY_LMENU);
-        KEY_ALIASES.put("space", Keyboard.KEY_SPACE);
-        KEY_ALIASES.put("tab", Keyboard.KEY_TAB);
-        KEY_ALIASES.put("enter", Keyboard.KEY_RETURN);
-        KEY_ALIASES.put("return", Keyboard.KEY_RETURN);
-        KEY_ALIASES.put("backspace", Keyboard.KEY_BACK);
-        KEY_ALIASES.put("delete", Keyboard.KEY_DELETE);
-        KEY_ALIASES.put("insert", Keyboard.KEY_INSERT);
-        KEY_ALIASES.put("home", Keyboard.KEY_HOME);
-        KEY_ALIASES.put("end", Keyboard.KEY_END);
-        KEY_ALIASES.put("pgup", Keyboard.KEY_PRIOR);
-        KEY_ALIASES.put("pgdn", Keyboard.KEY_NEXT);
-        KEY_ALIASES.put("up", Keyboard.KEY_UP);
-        KEY_ALIASES.put("down", Keyboard.KEY_DOWN);
-        KEY_ALIASES.put("left", Keyboard.KEY_LEFT);
-        KEY_ALIASES.put("right", Keyboard.KEY_RIGHT);
-        KEY_ALIASES.put("none", Keyboard.KEY_NONE);
-    };
+
+        // Special keys (manually added)
+        addKey("rshift", Keyboard.KEY_RSHIFT);
+        addKey("lshift", Keyboard.KEY_LSHIFT);
+        addKey("shift", Keyboard.KEY_LSHIFT);
+        addKey("rctrl", Keyboard.KEY_RCONTROL);
+        addKey("lctrl", Keyboard.KEY_LCONTROL);
+        addKey("ctrl", Keyboard.KEY_LCONTROL);
+        addKey("ralt", Keyboard.KEY_RMENU);
+        addKey("lalt", Keyboard.KEY_LMENU);
+        addKey("alt", Keyboard.KEY_LMENU);
+        addKey("space", Keyboard.KEY_SPACE);
+        addKey("tab", Keyboard.KEY_TAB);
+        addKey("enter", Keyboard.KEY_RETURN);
+        addKey("return", Keyboard.KEY_RETURN);
+        addKey("backspace", Keyboard.KEY_BACK);
+        addKey("delete", Keyboard.KEY_DELETE);
+        addKey("insert", Keyboard.KEY_INSERT);
+        addKey("home", Keyboard.KEY_HOME);
+        addKey("end", Keyboard.KEY_END);
+        addKey("pgup", Keyboard.KEY_PRIOR);
+        addKey("pgdn", Keyboard.KEY_NEXT);
+        addKey("up", Keyboard.KEY_UP);
+        addKey("down", Keyboard.KEY_DOWN);
+        addKey("left", Keyboard.KEY_LEFT);
+        addKey("right", Keyboard.KEY_RIGHT);
+        addKey("none", Keyboard.KEY_NONE);
+    }
+
+    private static void addKey(String alias, int keyCode) {
+        if (keyCode != Keyboard.KEY_NONE) {
+            KEY_ALIASES.put(alias, keyCode);
+        }
+    }
 
     public BindCommand() {
         super("bind", "Bind a module to a key");

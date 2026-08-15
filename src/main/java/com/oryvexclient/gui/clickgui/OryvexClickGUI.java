@@ -3,11 +3,9 @@ package com.oryvexclient.gui.clickgui;
 import com.oryvexclient.OryvexClient;
 import com.oryvexclient.modules.Category;
 import com.oryvexclient.modules.Module;
-import com.oryvexclient.modules.ModuleManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.ArrayList;
