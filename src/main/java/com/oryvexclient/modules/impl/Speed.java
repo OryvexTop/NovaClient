@@ -11,7 +11,8 @@ public class Speed extends Module {
     public Speed() { super("Speed", "Moves faster.", Keyboard.KEY_NONE, Category.MOVEMENT); addSetting(speed); }
     @Override public void onUpdate() {
         if (mc.thePlayer.onGround && (mc.thePlayer.moveForward != 0 || mc.thePlayer.moveStrafing != 0)) {
-            MovementUtils.strafe((float)speed.getValue());
+            // FIX: use floatValue() to convert Double to float safely
+            MovementUtils.strafe(speed.getValue().floatValue());
         }
     }
 }

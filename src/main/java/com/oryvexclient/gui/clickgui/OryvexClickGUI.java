@@ -208,7 +208,7 @@ public class OryvexClickGUI extends GuiScreen {
             drawRect(x, y + HEADER_HEIGHT - 1, x + PANEL_WIDTH, y + HEADER_HEIGHT, ACCENT); // Accent line
             
             heightAnim.setTarget(open ? modules.size() * MODULE_HEIGHT : 0);
-            float h = heightAnim.getValue();
+            float h = (float) heightAnim.getValue(); // FIX: explicit cast to float
             if (h > 0) {
                 drawRect(x, y + HEADER_HEIGHT, x + PANEL_WIDTH, y + HEADER_HEIGHT + (int)h, PANEL_BG);
                 int moduleY = y + HEADER_HEIGHT;
