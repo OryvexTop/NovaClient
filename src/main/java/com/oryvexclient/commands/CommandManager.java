@@ -1,6 +1,6 @@
 package com.oryvexclient.commands;
 
-import com.oryvexclient.commands.commands.impl.BindCommand;
+import com.oryvexclient.commands.impl.BindCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;

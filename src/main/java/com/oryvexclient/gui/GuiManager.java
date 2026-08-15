@@ -1,6 +1,6 @@
 package com.oryvexclient.gui;
 
-import com.oryvexclient.gui.gui.clickgui.OryvexClickGUI;
+import com.oryvexclient.gui.clickgui.OryvexClickGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiOpenEvent;

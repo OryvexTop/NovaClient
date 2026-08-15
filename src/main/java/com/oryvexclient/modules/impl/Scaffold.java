@@ -1,7 +1,7 @@
 package com.oryvexclient.modules.impl;
 
-import com.oryvexclient.modules.impl.modules.Category;
-import com.oryvexclient.modules.impl.modules.Module;
+import com.oryvexclient.modules.Category;
+import com.oryvexclient.modules.Module;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;

@@ -1,8 +1,8 @@
 package com.oryvexclient.modules;
 
-import com.oryvexclient.modules.modules.impl.KillAura;
-import com.oryvexclient.modules.modules.impl.Scaffold;
-import com.oryvexclient.modules.modules.impl.Sprint;
+import com.oryvexclient.modules.impl.KillAura;
+import com.oryvexclient.modules.impl.Scaffold;
+import com.oryvexclient.modules.impl.Sprint;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 

@@ -1,9 +1,9 @@
 package com.oryvexclient.gui.clickgui;
 
-import com.oryvexclient.gui.clickgui.OryvexClient;
-import com.oryvexclient.gui.clickgui.modules.Category;
-import com.oryvexclient.gui.clickgui.modules.Module;
-import com.oryvexclient.gui.clickgui.modules.ModuleManager;
+import com.oryvexclient.OryvexClient;
+import com.oryvexclient.modules.Category;
+import com.oryvexclient.modules.Module;
+import com.oryvexclient.modules.ModuleManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -111,7 +111,6 @@ public class OryvexClickGUI extends GuiScreen {
         waitingForKeyModule = module;
     }
 
-    // Inner panel class
     private class CategoryPanel {
         private final Category category;
         private int x, y;

@@ -1,7 +1,7 @@
 package com.oryvexclient.utils;
 
-import com.oryvexclient.utils.OryvexClient;
-import com.oryvexclient.utils.modules.Module;
+import com.oryvexclient.OryvexClient;
+import com.oryvexclient.modules.Module;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;

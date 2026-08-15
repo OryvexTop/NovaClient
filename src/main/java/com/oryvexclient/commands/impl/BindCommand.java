@@ -1,8 +1,8 @@
 package com.oryvexclient.commands.impl;
 
-import com.oryvexclient.commands.impl.OryvexClient;
-import com.oryvexclient.commands.impl.commands.Command;
-import com.oryvexclient.commands.impl.modules.Module;
+import com.oryvexclient.OryvexClient;
+import com.oryvexclient.commands.Command;
+import com.oryvexclient.modules.Module;
 import org.lwjgl.input.Keyboard;
 
 import java.util.HashMap;
