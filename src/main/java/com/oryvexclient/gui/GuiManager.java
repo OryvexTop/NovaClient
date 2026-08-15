@@ -1,5 +1,5 @@
-package com.oryvexclient.gui;
 
+package com.oryvexclient.gui;
 import com.oryvexclient.gui.clickgui.OryvexClickGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -13,37 +13,18 @@ import org.lwjgl.input.Keyboard;
 public class GuiManager {
     private final Minecraft mc = Minecraft.getMinecraft();
     private final OryvexClickGUI clickGUI = new OryvexClickGUI();
-
-    public GuiManager() {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
+    public GuiManager() { MinecraftForge.EVENT_BUS.register(this); }
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
-        if (event.gui instanceof GuiMainMenu) {
-            event.gui = new OryvexMainMenu();
-        }
-        if (event.gui instanceof GuiChat && !(event.gui instanceof OryvexChatGUI)) {
-            event.gui = new OryvexChatGUI();
-        }
+        if (event.gui instanceof GuiMainMenu) event.gui = new OryvexMainMenu();
+        if (event.gui instanceof GuiChat && !(event.gui instanceof OryvexChatGUI)) event.gui = new OryvexChatGUI();
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
-        if (mc.theWorld == null || mc.thePlayer == null) return;
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
-            if (mc.currentScreen == null) {
-                mc.displayGuiScreen(clickGUI);
-            }
-        }
+        if (event.phase != TickEvent.Phase.START || mc.theWorld == null || mc.thePlayer == null) return;
+        if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) && mc.currentScreen == null) mc.displayGuiScreen(clickGUI);
     }
-
-    public void toggleGUI() {
-        if (mc.currentScreen == clickGUI) mc.displayGuiScreen(null);
-        else mc.displayGuiScreen(clickGUI);
-    }
-
     public OryvexClickGUI getClickGUI() { return clickGUI; }
 }

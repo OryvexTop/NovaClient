@@ -1,14 +1,10 @@
 # OryvexClient – Modern Minecraft 1.8.9 Forge Cheat Client
 
 ## Features
-- **Modern UI** (Catppuccin theme, draggable panels, gradient main menu)
-- **Alt Manager** (Offline session changing)
-- **KillAura** with silent aim and precise rotations
-- **Scaffold** (Silent block placement with proper packet handling)
-- **Sprint** (Auto sprint)
-- **Commands:** `.bind [module] [key]`, `.toggle [module]` (with autocomplete)
-- **Robust Config System** (JSON based, pretty printed)
-- **GitHub Actions CI/CD**
+- **20 Modules** across Combat, Movement, World, Render, and Other categories.
+- **Modern UI** with smooth animations, Catppuccin theme, and draggable panels.
+- **Robust Command System** with `.bind` and `.toggle` commands and chat autocomplete.
+- **Fully Fixed Build System** compatible with GitHub Actions.
 
 ## Usage
 - **Right Shift:** Open Click GUI

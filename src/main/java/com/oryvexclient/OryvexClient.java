@@ -1,5 +1,5 @@
-package com.oryvexclient;
 
+package com.oryvexclient;
 import com.oryvexclient.commands.CommandManager;
 import com.oryvexclient.gui.GuiManager;
 import com.oryvexclient.modules.ModuleManager;
@@ -13,10 +13,6 @@ import org.lwjgl.opengl.Display;
 
 @Mod(modid = "oryvexclient", name = "OryvexClient", version = "1.0.0", clientSideOnly = true)
 public class OryvexClient {
-    public static final String MODID = "oryvexclient";
-    public static final String NAME = "OryvexClient";
-    public static final String VERSION = "1.0.0";
-
     private static OryvexClient instance;
     private ModuleManager moduleManager;
     private CommandManager commandManager;
@@ -32,20 +28,13 @@ public class OryvexClient {
         keybindManager = new KeybindManager();
         guiManager = new GuiManager();
         configManager = new ConfigManager();
-
-        MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(guiManager);
         MinecraftForge.EVENT_BUS.register(keybindManager);
-        
         Display.setTitle("OryvexClient v1.0");
-        System.out.println("[OryvexClient] PreInit complete.");
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        configManager.loadConfig();
-    }
-
+    public void init(FMLInitializationEvent event) { configManager.loadConfig(); }
     public static OryvexClient getInstance() { return instance; }
     public ModuleManager getModuleManager() { return moduleManager; }
     public CommandManager getCommandManager() { return commandManager; }

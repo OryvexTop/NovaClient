@@ -1,5 +1,5 @@
-package com.oryvexclient.gui;
 
+package com.oryvexclient.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiMultiplayer;
@@ -7,18 +7,14 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.renderer.GlStateManager;
 import com.oryvexclient.gui.altmanager.AltManagerGUI;
-
 import java.awt.Color;
 
 public class OryvexMainMenu extends GuiScreen {
-    private float gradientShift = 0f;
-
     @Override
     public void initGui() {
         this.buttonList.clear();
         int centerY = this.height / 2;
         int centerX = this.width / 2;
-
         this.buttonList.add(new OryvexButton(1, centerX - 100, centerY - 40, 200, 20, "Singleplayer"));
         this.buttonList.add(new OryvexButton(2, centerX - 100, centerY - 15, 200, 20, "Multiplayer"));
         this.buttonList.add(new OryvexButton(3, centerX - 100, centerY + 10, 98, 20, "Alt Manager"));
@@ -28,31 +24,19 @@ public class OryvexMainMenu extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawGradientBackground(partialTicks);
-        
+        int topColor = new Color(17, 17, 27, 255).getRGB();
+        int bottomColor = new Color(30, 30, 46, 255).getRGB();
+        drawGradientRect(0, 0, this.width, this.height, topColor, bottomColor);
         GlStateManager.pushMatrix();
         GlStateManager.scale(2.0f, 2.0f, 2.0f);
         drawCenteredString(this.fontRendererObj, "ORYVEX CLIENT", this.width / 4, 20, 0xFF89B4FA);
         GlStateManager.popMatrix();
-        
         drawCenteredString(this.fontRendererObj, "v1.0.0 | Modern 1.8.9 Client", this.width / 2, 60, 0xFFA6ADC8);
-
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    private void drawGradientBackground(float partialTicks) {
-        gradientShift += partialTicks * 0.001f;
-        if (gradientShift > 1) gradientShift = 0;
-        int topColor = new Color(17, 17, 27, 255).getRGB();
-        int bottomColor = new Color(30, 30, 46, 255).getRGB();
-        drawGradientRect(0, 0, this.width, this.height, topColor, bottomColor);
-    }
-    
     class OryvexButton extends GuiButton {
-        public OryvexButton(int buttonId, int x, int y, int width, int height, String buttonText) {
-            super(buttonId, x, y, width, height, buttonText);
-        }
-        
+        public OryvexButton(int buttonId, int x, int y, int width, int height, String buttonText) { super(buttonId, x, y, width, height, buttonText); }
         @Override
         public void drawButton(net.minecraft.client.Minecraft mc, int mouseX, int mouseY) {
             if (this.visible) {
@@ -76,7 +60,5 @@ public class OryvexMainMenu extends GuiScreen {
             case 5: this.mc.shutdown(); break;
         }
     }
-
-    @Override
-    public boolean doesGuiPauseGame() { return false; }
+    @Override public boolean doesGuiPauseGame() { return false; }
 }

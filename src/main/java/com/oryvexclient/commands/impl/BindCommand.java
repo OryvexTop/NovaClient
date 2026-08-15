@@ -1,5 +1,5 @@
-package com.oryvexclient.commands.impl;
 
+package com.oryvexclient.commands.impl;
 import com.oryvexclient.OryvexClient;
 import com.oryvexclient.commands.Command;
 import com.oryvexclient.modules.Module;
@@ -7,21 +7,13 @@ import org.lwjgl.input.Keyboard;
 
 public class BindCommand extends Command {
     public BindCommand() { super("bind", "Bind a module to a key"); }
-
     @Override
     public void execute(String[] args) {
-        if (args.length < 3) {
-            OryvexClient.getInstance().getCommandManager().sendMessage("Usage: .bind <module> <key>");
-            return;
-        }
+        if (args.length < 3) { OryvexClient.getInstance().getCommandManager().sendMessage("Usage: .bind <module> <key>"); return; }
         String moduleName = args[1];
         String keyName = args[2].toUpperCase();
-
         Module module = OryvexClient.getInstance().getModuleManager().getModuleByName(moduleName);
-        if (module == null) {
-            OryvexClient.getInstance().getCommandManager().sendMessage("Module '" + moduleName + "' not found.");
-            return;
-        }
+        if (module == null) { OryvexClient.getInstance().getCommandManager().sendMessage("Module '" + moduleName + "' not found."); return; }
 
         int keyCode = Keyboard.KEY_NONE;
         if (keyName.equals("NONE")) keyCode = Keyboard.KEY_NONE;
@@ -35,15 +27,11 @@ public class BindCommand extends Command {
         else keyCode = Keyboard.getKeyIndex(keyName);
 
         if (keyCode == Keyboard.KEY_NONE && !keyName.equals("NONE")) {
-            OryvexClient.getInstance().getCommandManager().sendMessage("Invalid key: " + keyName);
-            return;
+            OryvexClient.getInstance().getCommandManager().sendMessage("Invalid key: " + keyName); return;
         }
-
         module.setKeybind(keyCode);
         OryvexClient.getInstance().getKeybindManager().updateBinds();
         OryvexClient.getInstance().getConfigManager().saveConfig();
-        OryvexClient.getInstance().getCommandManager().sendMessage(
-            "Bound " + module.getName() + " to " + (keyCode == Keyboard.KEY_NONE ? "NONE" : Keyboard.getKeyName(keyCode))
-        );
+        OryvexClient.getInstance().getCommandManager().sendMessage("Bound " + module.getName() + " to " + (keyCode == Keyboard.KEY_NONE ? "NONE" : Keyboard.getKeyName(keyCode)));
     }
 }

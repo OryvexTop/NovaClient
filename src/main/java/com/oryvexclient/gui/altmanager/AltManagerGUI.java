@@ -1,12 +1,11 @@
-package com.oryvexclient.gui.altmanager;
 
+package com.oryvexclient.gui.altmanager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -21,7 +20,6 @@ public class AltManagerGUI extends GuiScreen {
     private String statusMessage = "";
 
     public AltManagerGUI(GuiScreen parent) { this.parent = parent; }
-
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
@@ -34,10 +32,11 @@ public class AltManagerGUI extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        int topColor = new Color(17, 17, 27, 255).getRGB();
+        int bottomColor = new Color(30, 30, 46, 255).getRGB();
+        drawGradientRect(0, 0, this.width, this.height, topColor, bottomColor);
         drawCenteredString(fontRendererObj, "Alt Manager", this.width / 2, 20, 0xFF89B4FA);
         if (!statusMessage.isEmpty()) drawCenteredString(fontRendererObj, statusMessage, this.width / 2, 40, 0xFFFFFFFF);
-        
         usernameField.drawTextBox();
         int y = 170;
         for (int i = 0; i < alts.size(); i++) {
@@ -53,9 +52,7 @@ public class AltManagerGUI extends GuiScreen {
         usernameField.mouseClicked(mouseX, mouseY, mouseButton);
         int y = 170;
         for (int i = 0; i < alts.size(); i++) {
-            if (mouseX >= this.width / 2 - 50 && mouseX <= this.width / 2 + 50 && mouseY >= y && mouseY <= y + 12) {
-                selected = i;
-            }
+            if (mouseX >= this.width / 2 - 50 && mouseX <= this.width / 2 + 50 && mouseY >= y && mouseY <= y + 12) selected = i;
             y += 12;
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -71,17 +68,11 @@ public class AltManagerGUI extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
             case 1:
-                if (!usernameField.getText().isEmpty()) {
-                    alts.add(usernameField.getText());
-                    usernameField.setText("");
-                }
-                break;
+                if (!usernameField.getText().isEmpty()) { alts.add(usernameField.getText()); usernameField.setText(""); } break;
             case 2:
-                if (selected >= 0 && selected < alts.size()) setSessionUsername(alts.get(selected));
-                break;
+                if (selected >= 0 && selected < alts.size()) setSessionUsername(alts.get(selected)); break;
             case 3:
-                mc.displayGuiScreen(parent);
-                break;
+                mc.displayGuiScreen(parent); break;
         }
     }
 
@@ -91,11 +82,7 @@ public class AltManagerGUI extends GuiScreen {
             sessionField.setAccessible(true);
             sessionField.set(mc, new Session(name, "0", "0", "mojang"));
             statusMessage = "Logged in as " + name;
-        } catch (Exception e) {
-            statusMessage = "Failed to change session.";
-        }
+        } catch (Exception e) { statusMessage = "Failed to change session."; }
     }
-
-    @Override
-    public void onGuiClosed() { Keyboard.enableRepeatEvents(false); }
+    @Override public void onGuiClosed() { Keyboard.enableRepeatEvents(false); }
 }
