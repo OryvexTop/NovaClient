@@ -8,6 +8,7 @@ import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +82,14 @@ public class AltManagerGUI extends GuiScreen {
     }
 
     private void setSessionUsername(String name) {
-        mc.setSession(new Session(name, "0", "0", "mojang"));
-        System.out.println("Session changed to " + name);
+        try {
+            Field sessionField = Minecraft.class.getDeclaredField("session");
+            sessionField.setAccessible(true);
+            sessionField.set(mc, new Session(name, "0", "0", "mojang"));
+            System.out.println("Session changed to " + name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
