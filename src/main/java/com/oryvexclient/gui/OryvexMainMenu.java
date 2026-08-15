@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
 import net.minecraft.client.renderer.GlStateManager;
-import com/oryvexclient/gui.altmanager.AltManagerGUI;
+import com.oryvexclient.gui.altmanager.AltManagerGUI;
 
 import java.awt.Color;
 
