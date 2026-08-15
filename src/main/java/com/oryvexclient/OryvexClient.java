@@ -5,7 +5,6 @@ import com.oryvexclient.gui.GuiManager;
 import com.oryvexclient.modules.ModuleManager;
 import com.oryvexclient.utils.ConfigManager;
 import com.oryvexclient.utils.KeybindManager;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

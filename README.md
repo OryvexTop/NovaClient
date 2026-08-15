@@ -3,20 +3,22 @@
 ## Features
 - **Modern Click GUI** (Right Shift to open, draggable panels, right-click to change keybind)
 - **Custom main menu** (black & blue theme)
-- **KillAura** (R key)
+- **Alt Manager** (change username offline)
+- **KillAura** with silent aim (R key)
 - **Scaffold** (bind via `.bind scaffold [key]`)
 - **Sprint** (auto sprint)
-- **Bind command:** `.bind [module] [key]`
-- **Config saving** (auto save on toggle / bind)
+- **Bind command:** `.bind [module] [key]` (works in chat with suggestions)
+- **Config saving**
 - **GitHub Actions build**
 
 ## Usage
-- **Right Shift:** Open/close Click GUI
+- **Right Shift:** Open Click GUI
 - **Right-click module in GUI:** Assign a new keybind
-- **Chat command:** `.bind [module] [key]`
+- **In chat, type `.`** to see command suggestions, then `.bind [module] [key]`
+- **Alt Manager:** In main menu
 
 ## Installation
-1. Download the **main jar** (`OryvexClient-1.0.0.jar`) from GitHub Actions artifacts. **Do not place the `-sources.jar` in the mods folder**; it is not a mod and may cause warnings.
+1. Download the **main jar** (`OryvexClient-1.0.0.jar`) from GitHub Actions artifacts.
 2. Place it in `.minecraft/mods`.
 3. Launch Minecraft Forge 1.8.9.
 
@@ -24,7 +26,7 @@
 ```bash
 ./gradlew build
 ```
-Output in `build/libs/`. Only use the file without `-sources` as a mod.
+Output in `build/libs/`.
 
 ## Important
 - For educational purposes only.

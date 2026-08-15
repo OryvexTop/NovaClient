@@ -15,7 +15,12 @@ public class OryvexClickGUI extends GuiScreen {
 
     private static final int PANEL_WIDTH = 100;
     private static final int PANEL_HEIGHT = 18;
-    private static final int CATEGORY_SPACING = 5;
+    private static final int CATEGORY_SPACING = 8;
+    private static final int BACKGROUND_COLOR = 0xFF0F0F0F;
+    private static final int HEADER_COLOR = 0xFF1A1A1A;
+    private static final int MODULE_BG = 0xFF232323;
+    private static final int MODULE_HOVER_BG = 0xFF2E2E2E;
+    private static final int ACCENT = 0x00AAFF;
 
     private final Minecraft mc = Minecraft.getMinecraft();
     private final List<CategoryPanel> panels = new ArrayList<>();
@@ -159,9 +164,10 @@ public class OryvexClickGUI extends GuiScreen {
         }
 
         void draw(int mouseX, int mouseY) {
-            drawRect(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, 0xFF141414);
+            // Header
+            drawRect(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, HEADER_COLOR);
             String title = category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase();
-            mc.fontRendererObj.drawStringWithShadow(title, x + 5, y + 5, 0x00AAFF);
+            mc.fontRendererObj.drawStringWithShadow(title, x + 5, y + 5, ACCENT);
             String arrow = open ? "-" : "+";
             mc.fontRendererObj.drawStringWithShadow(arrow, x + PANEL_WIDTH - 10, y + 5, 0xFFFFFF);
 
@@ -170,7 +176,7 @@ public class OryvexClickGUI extends GuiScreen {
                 for (Module module : modules) {
                     int rowHeight = 16;
                     boolean hovered = mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= moduleY && mouseY <= moduleY + rowHeight;
-                    int bgColor = hovered ? 0xFF282828 : 0xFF1E1E1E;
+                    int bgColor = hovered ? MODULE_HOVER_BG : MODULE_BG;
                     drawRect(x, moduleY, x + PANEL_WIDTH, moduleY + rowHeight, bgColor);
 
                     int textColor = module.isToggled() ? 0x00FF00 : 0xFF5555;

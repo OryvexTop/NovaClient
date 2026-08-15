@@ -29,13 +29,13 @@ public class Scaffold extends Module {
     @Override
     public void onUpdate() {
         if (mc.thePlayer == null || mc.theWorld == null) return;
-        if (!mc.thePlayer.onGround) return;
-
         BlockPos below = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
         Block blockBelow = mc.theWorld.getBlockState(below).getBlock();
         if (isValid(blockBelow)) {
             int slot = getBlockSlot();
-            if (slot != -1) placeBlock(below, slot);
+            if (slot != -1) {
+                placeBlock(below, slot);
+            }
         }
     }
 
@@ -57,6 +57,7 @@ public class Scaffold extends Module {
     private void placeBlock(BlockPos pos, int slot) {
         int oldSlot = mc.thePlayer.inventory.currentItem;
         mc.thePlayer.inventory.currentItem = slot;
+
         for (EnumFacing facing : EnumFacing.values()) {
             BlockPos neighbor = pos.offset(facing);
             Block neighborBlock = mc.theWorld.getBlockState(neighbor).getBlock();
@@ -69,6 +70,7 @@ public class Scaffold extends Module {
                 break;
             }
         }
+
         mc.thePlayer.inventory.currentItem = oldSlot;
     }
 

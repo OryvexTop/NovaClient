@@ -38,7 +38,7 @@ public class BindCommand extends Command {
             }
         }
 
-        // Special keys (manually added)
+        // Special keys
         addKey("rshift", Keyboard.KEY_RSHIFT);
         addKey("lshift", Keyboard.KEY_LSHIFT);
         addKey("shift", Keyboard.KEY_LSHIFT);

@@ -5,6 +5,7 @@ import com.oryvexclient.modules.Module;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
@@ -15,7 +16,6 @@ import java.util.List;
 public class KillAura extends Module {
 
     private float range = 4.5f;
-    private float rotationSpeed = 180f;
     private boolean onlyPlayers = true;
     private boolean throughWalls = false;
     private long lastAttackTime = 0;
@@ -37,12 +37,20 @@ public class KillAura extends Module {
         Entity target = findTarget();
         if (target == null) return;
 
-        rotateToEntity(target);
+        // Silent rotations
+        double[] rotations = getRotations(target);
+        sendRotationPacket((float) rotations[0], (float) rotations[1]);
+
         if (System.currentTimeMillis() - lastAttackTime >= attackDelay) {
             mc.playerController.attackEntity(mc.thePlayer, target);
             mc.thePlayer.swingItem();
             lastAttackTime = System.currentTimeMillis();
         }
+    }
+
+    private void sendRotationPacket(float yaw, float pitch) {
+        C03PacketPlayer.C05PacketPlayerLook packet = new C03PacketPlayer.C05PacketPlayerLook(yaw, pitch, mc.thePlayer.onGround);
+        mc.getNetHandler().addToSendQueue(packet);
     }
 
     private Entity findTarget() {
@@ -62,12 +70,6 @@ public class KillAura extends Module {
             .filter(e -> throughWalls || mc.thePlayer.canEntityBeSeen(e))
             .min(Comparator.comparingDouble(e -> e.getDistanceToEntity(mc.thePlayer)))
             .orElse(null);
-    }
-
-    private void rotateToEntity(Entity entity) {
-        double[] rotations = getRotations(entity);
-        mc.thePlayer.rotationYaw = (float) rotations[0];
-        mc.thePlayer.rotationPitch = (float) rotations[1];
     }
 
     private double[] getRotations(Entity entity) {

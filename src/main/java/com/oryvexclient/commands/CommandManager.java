@@ -17,6 +17,10 @@ public class CommandManager {
         commands.add(new BindCommand());
     }
 
+    public List<Command> getCommands() {
+        return commands;
+    }
+
     public void executeCommand(String input) {
         if (!input.startsWith(".")) return;
         String[] args = input.substring(1).split(" ");

@@ -2,6 +2,7 @@ package com.oryvexclient.gui;
 
 import com.oryvexclient.gui.clickgui.OryvexClickGUI;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,6 +24,9 @@ public class GuiManager {
     public void onGuiOpen(GuiOpenEvent event) {
         if (event.gui instanceof GuiMainMenu) {
             event.gui = new OryvexMainMenu();
+        }
+        if (event.gui instanceof GuiChat && !(event.gui instanceof OryvexChatGUI)) {
+            event.gui = new OryvexChatGUI();
         }
     }
 
