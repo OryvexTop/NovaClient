@@ -11,13 +11,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
 public class GuiManager {
-
     private final Minecraft mc = Minecraft.getMinecraft();
-    private final OryvexClickGUI clickGUI;
+    private final OryvexClickGUI clickGUI = new OryvexClickGUI();
 
     public GuiManager() {
         MinecraftForge.EVENT_BUS.register(this);
-        clickGUI = new OryvexClickGUI();
     }
 
     @SubscribeEvent
@@ -35,7 +33,6 @@ public class GuiManager {
         if (event.phase != TickEvent.Phase.START) return;
         if (mc.theWorld == null || mc.thePlayer == null) return;
 
-        // Toggle ClickGUI with Right Shift
         if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
             if (mc.currentScreen == null) {
                 mc.displayGuiScreen(clickGUI);
@@ -44,14 +41,9 @@ public class GuiManager {
     }
 
     public void toggleGUI() {
-        if (mc.currentScreen == clickGUI) {
-            mc.displayGuiScreen(null);
-        } else {
-            mc.displayGuiScreen(clickGUI);
-        }
+        if (mc.currentScreen == clickGUI) mc.displayGuiScreen(null);
+        else mc.displayGuiScreen(clickGUI);
     }
 
-    public OryvexClickGUI getClickGUI() {
-        return clickGUI;
-    }
+    public OryvexClickGUI getClickGUI() { return clickGUI; }
 }

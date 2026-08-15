@@ -7,21 +7,20 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AltManagerGUI extends GuiScreen {
-
     private GuiScreen parent;
     private GuiTextField usernameField;
     private List<String> alts = new ArrayList<>();
     private int selected = -1;
+    private String statusMessage = "";
 
-    public AltManagerGUI(GuiScreen parent) {
-        this.parent = parent;
-    }
+    public AltManagerGUI(GuiScreen parent) { this.parent = parent; }
 
     @Override
     public void initGui() {
@@ -36,12 +35,14 @@ public class AltManagerGUI extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
-        drawCenteredString(fontRendererObj, "Alt Manager", this.width / 2, 20, 0xFFFFFF);
+        drawCenteredString(fontRendererObj, "Alt Manager", this.width / 2, 20, 0xFF89B4FA);
+        if (!statusMessage.isEmpty()) drawCenteredString(fontRendererObj, statusMessage, this.width / 2, 40, 0xFFFFFFFF);
+        
         usernameField.drawTextBox();
         int y = 170;
         for (int i = 0; i < alts.size(); i++) {
-            int color = (i == selected) ? 0x00AAFF : 0xFFFFFF;
-            drawString(fontRendererObj, alts.get(i), 10, y, color);
+            int color = (i == selected) ? 0xFF89B4FA : 0xFFFFFFFF;
+            drawString(fontRendererObj, alts.get(i), this.width / 2 - 50, y, color);
             y += 12;
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -50,14 +51,19 @@ public class AltManagerGUI extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         usernameField.mouseClicked(mouseX, mouseY, mouseButton);
+        int y = 170;
+        for (int i = 0; i < alts.size(); i++) {
+            if (mouseX >= this.width / 2 - 50 && mouseX <= this.width / 2 + 50 && mouseY >= y && mouseY <= y + 12) {
+                selected = i;
+            }
+            y += 12;
+        }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (usernameField.textboxKeyTyped(typedChar, keyCode)) {
-            return;
-        }
+        if (usernameField.textboxKeyTyped(typedChar, keyCode)) return;
         super.keyTyped(typedChar, keyCode);
     }
 
@@ -71,9 +77,7 @@ public class AltManagerGUI extends GuiScreen {
                 }
                 break;
             case 2:
-                if (selected >= 0 && selected < alts.size()) {
-                    setSessionUsername(alts.get(selected));
-                }
+                if (selected >= 0 && selected < alts.size()) setSessionUsername(alts.get(selected));
                 break;
             case 3:
                 mc.displayGuiScreen(parent);
@@ -86,14 +90,12 @@ public class AltManagerGUI extends GuiScreen {
             Field sessionField = Minecraft.class.getDeclaredField("session");
             sessionField.setAccessible(true);
             sessionField.set(mc, new Session(name, "0", "0", "mojang"));
-            System.out.println("Session changed to " + name);
+            statusMessage = "Logged in as " + name;
         } catch (Exception e) {
-            e.printStackTrace();
+            statusMessage = "Failed to change session.";
         }
     }
 
     @Override
-    public void onGuiClosed() {
-        Keyboard.enableRepeatEvents(false);
-    }
+    public void onGuiClosed() { Keyboard.enableRepeatEvents(false); }
 }

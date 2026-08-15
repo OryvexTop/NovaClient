@@ -5,10 +5,7 @@ import com.oryvexclient.modules.Module;
 import org.lwjgl.input.Keyboard;
 
 public class Sprint extends Module {
-
-    public Sprint() {
-        super("Sprint", Keyboard.KEY_NONE, Category.MOVEMENT);
-    }
+    public Sprint() { super("Sprint", "Auto sprints.", Keyboard.KEY_NONE, Category.MOVEMENT); }
 
     @Override
     public void onUpdate() {

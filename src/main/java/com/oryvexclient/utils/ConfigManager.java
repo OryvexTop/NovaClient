@@ -1,20 +1,25 @@
 package com.oryvexclient.utils;
 
-import com.oryvexclient.OryvexClient;
-import com.oryvexclient.modules.Module;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.oryvexclient.OryvexClient;
+import com.oryvexclient.modules.Module;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
 
 public class ConfigManager {
-
-    private static final String CONFIG_FILE = "oryvexclient_config.json";
+    private final File dir;
     private final File configFile;
+    private final Gson gson;
 
     public ConfigManager() {
-        configFile = new File(Minecraft.getMinecraft().mcDataDir, CONFIG_FILE);
+        dir = new File(Minecraft.getMinecraft().mcDataDir, "oryvexclient");
+        if (!dir.exists()) dir.mkdirs();
+        configFile = new File(dir, "config.json");
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     public void saveConfig() {
@@ -30,7 +35,7 @@ public class ConfigManager {
             root.add("modules", modulesJson);
 
             FileWriter writer = new FileWriter(configFile);
-            writer.write(root.toString());
+            writer.write(gson.toJson(root));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,6 +65,7 @@ public class ConfigManager {
                 }
             }
             reader.close();
+            OryvexClient.getInstance().getKeybindManager().updateBinds();
         } catch (Exception e) {
             e.printStackTrace();
         }

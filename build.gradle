@@ -1,20 +1,12 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "forge2"
-            url = "https://maven.minecraftforge.net/"
-        }
+        maven { name = "forge"; url = "https://maven.minecraftforge.net/" }
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
     }
 }
-
 apply plugin: "net.minecraftforge.gradle.forge"
 
 version = "1.0.0"
@@ -31,31 +23,17 @@ minecraft {
 
 repositories {
     mavenCentral()
-    maven {
-        name = "forge"
-        url = "https://files.minecraftforge.net/maven"
-    }
-    maven {
-        name = "forge2"
-        url = "https://maven.minecraftforge.net/"
-    }
-}
-
-dependencies {
-    // No extra dependencies
+    maven { name = "forge"; url = "https://maven.minecraftforge.net/" }
 }
 
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-
     from(sourceSets.main.resources.srcDirs) {
         include "mcmod.info"
         expand "version": project.version, "mcversion": project.minecraft.version
     }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
+    from(sourceSets.main.resources.srcDirs) { exclude "mcmod.info" }
 }
 
 jar {
@@ -63,7 +41,6 @@ jar {
         attributes(
             "Implementation-Title": "OryvexClient",
             "Implementation-Version": project.version,
-            "Implementation-Vendor": "Oryvex",
             "ModSide": "CLIENT"
         )
     }

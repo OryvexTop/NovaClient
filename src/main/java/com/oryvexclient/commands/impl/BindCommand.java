@@ -5,82 +5,17 @@ import com.oryvexclient.commands.Command;
 import com.oryvexclient.modules.Module;
 import org.lwjgl.input.Keyboard;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class BindCommand extends Command {
-
-    private static final Map<String, Integer> KEY_ALIASES = new HashMap<>();
-
-    static {
-        for (char c = 'A'; c <= 'Z'; c++) {
-            String name = String.valueOf(c);
-            int code = Keyboard.getKeyIndex(name);
-            if (code != Keyboard.KEY_NONE) {
-                KEY_ALIASES.put(name.toLowerCase(), code);
-            }
-        }
-        for (char c = '0'; c <= '9'; c++) {
-            String name = String.valueOf(c);
-            int code = Keyboard.getKeyIndex(name);
-            if (code != Keyboard.KEY_NONE) {
-                KEY_ALIASES.put(name, code);
-            }
-        }
-        for (int i = 1; i <= 12; i++) {
-            String name = "F" + i;
-            int code = Keyboard.getKeyIndex(name);
-            if (code != Keyboard.KEY_NONE) {
-                KEY_ALIASES.put(name.toLowerCase(), code);
-            }
-        }
-
-        addKey("rshift", Keyboard.KEY_RSHIFT);
-        addKey("lshift", Keyboard.KEY_LSHIFT);
-        addKey("shift", Keyboard.KEY_LSHIFT);
-        addKey("rctrl", Keyboard.KEY_RCONTROL);
-        addKey("lctrl", Keyboard.KEY_LCONTROL);
-        addKey("ctrl", Keyboard.KEY_LCONTROL);
-        addKey("ralt", Keyboard.KEY_RMENU);
-        addKey("lalt", Keyboard.KEY_LMENU);
-        addKey("alt", Keyboard.KEY_LMENU);
-        addKey("space", Keyboard.KEY_SPACE);
-        addKey("tab", Keyboard.KEY_TAB);
-        addKey("enter", Keyboard.KEY_RETURN);
-        addKey("return", Keyboard.KEY_RETURN);
-        addKey("backspace", Keyboard.KEY_BACK);
-        addKey("delete", Keyboard.KEY_DELETE);
-        addKey("insert", Keyboard.KEY_INSERT);
-        addKey("home", Keyboard.KEY_HOME);
-        addKey("end", Keyboard.KEY_END);
-        addKey("pgup", Keyboard.KEY_PRIOR);
-        addKey("pgdn", Keyboard.KEY_NEXT);
-        addKey("up", Keyboard.KEY_UP);
-        addKey("down", Keyboard.KEY_DOWN);
-        addKey("left", Keyboard.KEY_LEFT);
-        addKey("right", Keyboard.KEY_RIGHT);
-        addKey("none", Keyboard.KEY_NONE);
-    }
-
-    private static void addKey(String alias, int keyCode) {
-        if (keyCode != Keyboard.KEY_NONE) {
-            KEY_ALIASES.put(alias, keyCode);
-        }
-    }
-
-    public BindCommand() {
-        super("bind", "Bind a module to a key");
-    }
+    public BindCommand() { super("bind", "Bind a module to a key"); }
 
     @Override
     public void execute(String[] args) {
         if (args.length < 3) {
-            OryvexClient.getInstance().getCommandManager().sendMessage("Usage: .bind [module] [key]");
+            OryvexClient.getInstance().getCommandManager().sendMessage("Usage: .bind <module> <key>");
             return;
         }
-
         String moduleName = args[1];
-        String keyName = args[2].toLowerCase();
+        String keyName = args[2].toUpperCase();
 
         Module module = OryvexClient.getInstance().getModuleManager().getModuleByName(moduleName);
         if (module == null) {
@@ -88,17 +23,27 @@ public class BindCommand extends Command {
             return;
         }
 
-        Integer keyCode = KEY_ALIASES.get(keyName);
-        if (keyCode == null) {
+        int keyCode = Keyboard.KEY_NONE;
+        if (keyName.equals("NONE")) keyCode = Keyboard.KEY_NONE;
+        else if (keyName.equals("RSHIFT")) keyCode = Keyboard.KEY_RSHIFT;
+        else if (keyName.equals("LSHIFT") || keyName.equals("SHIFT")) keyCode = Keyboard.KEY_LSHIFT;
+        else if (keyName.equals("RCONTROL") || keyName.equals("RCTRL")) keyCode = Keyboard.KEY_RCONTROL;
+        else if (keyName.equals("LCONTROL") || keyName.equals("LCTRL") || keyName.equals("CTRL")) keyCode = Keyboard.KEY_LCONTROL;
+        else if (keyName.equals("RALT")) keyCode = Keyboard.KEY_RMENU;
+        else if (keyName.equals("LALT") || keyName.equals("ALT")) keyCode = Keyboard.KEY_LMENU;
+        else if (keyName.equals("CAPITAL") || keyName.equals("CAPSLOCK")) keyCode = Keyboard.KEY_CAPITAL;
+        else keyCode = Keyboard.getKeyIndex(keyName);
+
+        if (keyCode == Keyboard.KEY_NONE && !keyName.equals("NONE")) {
             OryvexClient.getInstance().getCommandManager().sendMessage("Invalid key: " + keyName);
             return;
         }
 
         module.setKeybind(keyCode);
-        OryvexClient.getInstance().getKeybindManager().registerBind(module);
+        OryvexClient.getInstance().getKeybindManager().updateBinds();
         OryvexClient.getInstance().getConfigManager().saveConfig();
         OryvexClient.getInstance().getCommandManager().sendMessage(
-            "Bound " + module.getName() + " to " + Keyboard.getKeyName(keyCode)
+            "Bound " + module.getName() + " to " + (keyCode == Keyboard.KEY_NONE ? "NONE" : Keyboard.getKeyName(keyCode))
         );
     }
 }

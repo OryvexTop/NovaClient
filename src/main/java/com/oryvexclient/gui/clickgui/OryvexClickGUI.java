@@ -7,70 +7,60 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OryvexClickGUI extends GuiScreen {
+    private static final int PANEL_WIDTH = 120;
+    private static final int HEADER_HEIGHT = 18;
+    private static final int MODULE_HEIGHT = 16;
+    private static final int CATEGORY_SPACING = 15;
 
-    private static final int PANEL_WIDTH = 100;
-    private static final int PANEL_HEIGHT = 18;
-    private static final int CATEGORY_SPACING = 8;
-    private static final int BACKGROUND_COLOR = 0xFF0F0F0F;
-    private static final int HEADER_COLOR = 0xFF1A1A1A;
-    private static final int MODULE_BG = 0xFF232323;
-    private static final int MODULE_HOVER_BG = 0xFF2E2E2E;
-    private static final int ACCENT = 0x00AAFF;
+    private final int BG_COLOR = new Color(17, 17, 27, 180).getRGB();
+    private final int PANEL_BG = new Color(30, 30, 46, 255).getRGB();
+    private final int HEADER_BG = new Color(45, 45, 65, 255).getRGB();
+    private final int ACCENT = new Color(137, 180, 250, 255).getRGB();
+    private final int TEXT_COLOR = new Color(205, 214, 244, 255).getRGB();
+    private final int TEXT_SECONDARY = new Color(166, 173, 200, 255).getRGB();
+    private final int MODULE_HOVER = new Color(65, 65, 85, 255).getRGB();
 
-    private final Minecraft mc = Minecraft.getMinecraft();
-    private final List<CategoryPanel> panels = new ArrayList<>();
-    private Module waitingForKeyModule = null;
-
+    private final List<Panel> panels = new ArrayList<>();
+    private Module bindingModule = null;
+    private Panel draggingPanel = null;
     private int dragX, dragY;
-    private CategoryPanel draggingPanel = null;
 
     public OryvexClickGUI() {
-        int x = 10;
+        int x = 20;
         for (Category cat : Category.values()) {
-            panels.add(new CategoryPanel(cat, x, 10));
+            panels.add(new Panel(cat, x, 20));
             x += PANEL_WIDTH + CATEGORY_SPACING;
         }
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        for (CategoryPanel panel : panels) {
-            panel.draw(mouseX, mouseY);
-        }
-        if (waitingForKeyModule != null) {
-            drawCenteredString(mc.fontRendererObj, "Press a key for " + waitingForKeyModule.getName() + "...", width / 2, height / 2 - 10, 0xFFFF00);
+        drawRect(0, 0, width, height, BG_COLOR);
+        for (Panel panel : panels) panel.draw(mouseX, mouseY);
+        
+        if (bindingModule != null) {
+            drawCenteredString(mc.fontRendererObj, "Press a key for " + bindingModule.getName() + "...", width / 2, height - 40, 0xFFFF5555);
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if (waitingForKeyModule != null) {
-            int key = Keyboard.getEventKey();
-            if (key == Keyboard.KEY_ESCAPE) key = Keyboard.KEY_NONE;
-            waitingForKeyModule.setKeybind(key);
-            OryvexClient.getInstance().getKeybindManager().registerBind(waitingForKeyModule);
-            OryvexClient.getInstance().getConfigManager().saveConfig();
-            waitingForKeyModule = null;
-            return;
-        }
-
-        for (CategoryPanel panel : panels) {
+        if (bindingModule != null) return;
+        for (Panel panel : panels) {
             if (panel.isMouseOverHeader(mouseX, mouseY)) {
                 draggingPanel = panel;
                 dragX = mouseX - panel.x;
                 dragY = mouseY - panel.y;
                 return;
             }
-            if (panel.mouseClicked(mouseX, mouseY, mouseButton)) {
-                return;
-            }
+            if (panel.mouseClicked(mouseX, mouseY, mouseButton)) return;
         }
     }
 
@@ -90,12 +80,12 @@ public class OryvexClickGUI extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (waitingForKeyModule != null) {
+        if (bindingModule != null) {
             if (keyCode == Keyboard.KEY_ESCAPE) keyCode = Keyboard.KEY_NONE;
-            waitingForKeyModule.setKeybind(keyCode);
-            OryvexClient.getInstance().getKeybindManager().registerBind(waitingForKeyModule);
+            bindingModule.setKeybind(keyCode);
+            OryvexClient.getInstance().getKeybindManager().updateBinds();
             OryvexClient.getInstance().getConfigManager().saveConfig();
-            waitingForKeyModule = null;
+            bindingModule = null;
             return;
         }
         if (keyCode == Keyboard.KEY_ESCAPE) {
@@ -106,21 +96,15 @@ public class OryvexClickGUI extends GuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
+    public boolean doesGuiPauseGame() { return false; }
 
-    public void setWaitingForKey(Module module) {
-        waitingForKeyModule = module;
-    }
-
-    private class CategoryPanel {
+    private class Panel {
         private final Category category;
         private int x, y;
         private boolean open = true;
         private final List<Module> modules = new ArrayList<>();
 
-        CategoryPanel(Category category, int x, int y) {
+        Panel(Category category, int x, int y) {
             this.category = category;
             this.x = x;
             this.y = y;
@@ -135,57 +119,49 @@ public class OryvexClickGUI extends GuiScreen {
         }
 
         boolean isMouseOverHeader(int mouseX, int mouseY) {
-            return mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= y && mouseY <= y + PANEL_HEIGHT;
+            return mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= y && mouseY <= y + HEADER_HEIGHT;
         }
 
         boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
             if (isMouseOverHeader(mouseX, mouseY)) {
-                if (mouseButton == 0) {
-                    open = !open;
-                }
+                if (mouseButton == 0) open = !open;
                 return true;
             }
             if (open) {
-                int moduleY = y + PANEL_HEIGHT + 2;
+                int moduleY = y + HEADER_HEIGHT;
                 for (Module module : modules) {
-                    int rowHeight = 16;
-                    if (mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= moduleY && mouseY <= moduleY + rowHeight) {
-                        if (mouseButton == 0) {
-                            module.toggle();
-                        } else if (mouseButton == 1) {
-                            setWaitingForKey(module);
-                        }
+                    if (mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= moduleY && mouseY <= moduleY + MODULE_HEIGHT) {
+                        if (mouseButton == 0) module.toggle();
+                        else if (mouseButton == 1) bindingModule = module;
                         return true;
                     }
-                    moduleY += rowHeight;
+                    moduleY += MODULE_HEIGHT;
                 }
             }
             return false;
         }
 
         void draw(int mouseX, int mouseY) {
-            drawRect(x, y, x + PANEL_WIDTH, y + PANEL_HEIGHT, HEADER_COLOR);
+            drawRect(x, y, x + PANEL_WIDTH, y + HEADER_HEIGHT, HEADER_BG);
             String title = category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase();
             mc.fontRendererObj.drawStringWithShadow(title, x + 5, y + 5, ACCENT);
-            String arrow = open ? "-" : "+";
-            mc.fontRendererObj.drawStringWithShadow(arrow, x + PANEL_WIDTH - 10, y + 5, 0xFFFFFF);
-
+            
             if (open) {
-                int moduleY = y + PANEL_HEIGHT + 2;
+                int moduleY = y + HEADER_HEIGHT;
+                drawRect(x, moduleY, x + PANEL_WIDTH, moduleY + modules.size() * MODULE_HEIGHT, PANEL_BG);
                 for (Module module : modules) {
-                    int rowHeight = 16;
-                    boolean hovered = mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= moduleY && mouseY <= moduleY + rowHeight;
-                    int bgColor = hovered ? MODULE_HOVER_BG : MODULE_BG;
-                    drawRect(x, moduleY, x + PANEL_WIDTH, moduleY + rowHeight, bgColor);
+                    boolean hovered = mouseX >= x && mouseX <= x + PANEL_WIDTH && mouseY >= moduleY && mouseY <= moduleY + MODULE_HEIGHT;
+                    int bgColor = hovered ? MODULE_HOVER : PANEL_BG;
+                    drawRect(x, moduleY, x + PANEL_WIDTH, moduleY + MODULE_HEIGHT, bgColor);
 
-                    int textColor = module.isToggled() ? 0x00FF00 : 0xFF5555;
+                    int textColor = module.isToggled() ? ACCENT : TEXT_SECONDARY;
                     mc.fontRendererObj.drawStringWithShadow(module.getName(), x + 5, moduleY + 4, textColor);
 
                     String keyName = module.getKeybind() == Keyboard.KEY_NONE ? "NONE" : Keyboard.getKeyName(module.getKeybind());
                     int keyWidth = mc.fontRendererObj.getStringWidth(keyName);
-                    mc.fontRendererObj.drawStringWithShadow(keyName, x + PANEL_WIDTH - keyWidth - 5, moduleY + 4, 0xCCCCCC);
+                    mc.fontRendererObj.drawStringWithShadow(keyName, x + PANEL_WIDTH - keyWidth - 5, moduleY + 4, 0xFF888888);
 
-                    moduleY += rowHeight;
+                    moduleY += MODULE_HEIGHT;
                 }
             }
         }

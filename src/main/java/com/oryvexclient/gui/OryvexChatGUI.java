@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OryvexChatGUI extends GuiChat {
-
     private List<String> suggestions = new ArrayList<>();
 
     @Override
@@ -39,11 +38,8 @@ public class OryvexChatGUI extends GuiChat {
         try {
             Field field = GuiChat.class.getDeclaredField("inputField");
             field.setAccessible(true);
-            GuiTextField fieldObj = (GuiTextField) field.get(this);
-            return fieldObj.getText();
-        } catch (Exception e) {
-            return "";
-        }
+            return ((GuiTextField) field.get(this)).getText();
+        } catch (Exception e) { return ""; }
     }
 
     private void updateSuggestions() {
@@ -54,20 +50,14 @@ public class OryvexChatGUI extends GuiChat {
         if (parts.length == 0) return;
         String current = parts[0].toLowerCase();
 
-        // Command suggestions
         for (Command cmd : OryvexClient.getInstance().getCommandManager().getCommands()) {
-            if (cmd.getName().startsWith(current)) {
-                suggestions.add("." + cmd.getName());
-            }
+            if (cmd.getName().startsWith(current)) suggestions.add("." + cmd.getName());
         }
 
-        // For .bind, suggest modules if typing module name
         if (parts.length >= 2 && parts[0].equalsIgnoreCase("bind")) {
             String modulePart = parts[1].toLowerCase();
             for (Module m : OryvexClient.getInstance().getModuleManager().getModules()) {
-                if (m.getName().toLowerCase().startsWith(modulePart)) {
-                    suggestions.add("." + parts[0] + " " + m.getName());
-                }
+                if (m.getName().toLowerCase().startsWith(modulePart)) suggestions.add("." + parts[0] + " " + m.getName());
             }
         }
     }
@@ -78,7 +68,8 @@ public class OryvexChatGUI extends GuiChat {
         if (!suggestions.isEmpty()) {
             int y = this.height - 30 - (suggestions.size() * 12);
             for (String s : suggestions) {
-                drawString(mc.fontRendererObj, s, 5, y, 0x00AAFF);
+                drawRect(2, y - 2, 10 + mc.fontRendererObj.getStringWidth(s), y + 10, 0xDD000000);
+                drawString(mc.fontRendererObj, s, 5, y, 0xFF89B4FA);
                 y += 12;
             }
         }

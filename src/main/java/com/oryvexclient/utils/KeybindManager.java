@@ -2,38 +2,33 @@ package com.oryvexclient.utils;
 
 import com.oryvexclient.OryvexClient;
 import com.oryvexclient.modules.Module;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class KeybindManager {
+    private final Minecraft mc = Minecraft.getMinecraft();
+    private boolean[] pressed = new boolean[256];
 
-    private final List<Module> binds = new ArrayList<>();
-    private long lastPressTime = 0;
+    public void updateBinds() {}
 
-    public KeybindManager() {
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        if (mc.currentScreen != null) return;
+
         for (Module module : OryvexClient.getInstance().getModuleManager().getModules()) {
-            if (module.getKeybind() != Keyboard.KEY_NONE) binds.add(module);
-        }
-    }
+            int key = module.getKeybind();
+            if (key == Keyboard.KEY_NONE) continue;
+            if (key >= 256) continue;
 
-    public void registerBind(Module module) {
-        if (!binds.contains(module) && module.getKeybind() != Keyboard.KEY_NONE) {
-            binds.add(module);
-        } else if (module.getKeybind() == Keyboard.KEY_NONE) {
-            binds.remove(module);
-        }
-    }
-
-    public void checkKeybinds() {
-        if (System.currentTimeMillis() - lastPressTime < 100) return;
-        for (Module module : binds) {
-            if (Keyboard.isKeyDown(module.getKeybind())) {
+            boolean isDown = Keyboard.isKeyDown(key);
+            if (isDown && !pressed[key]) {
                 module.toggle();
-                lastPressTime = System.currentTimeMillis();
                 OryvexClient.getInstance().getConfigManager().saveConfig();
             }
+            pressed[key] = isDown;
         }
     }
 }
