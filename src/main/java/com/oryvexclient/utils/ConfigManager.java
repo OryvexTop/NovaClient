@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.oryvexclient.OryvexClient;
 import com.oryvexclient.modules.Module;
+import com.oryvexclient.utils.*;
 import net.minecraft.client.Minecraft;
 import java.io.*;
 
@@ -27,6 +28,14 @@ public class ConfigManager {
                 JsonObject moduleJson = new JsonObject();
                 moduleJson.addProperty("toggled", module.isToggled());
                 moduleJson.addProperty("keybind", module.getKeybind());
+                
+                JsonObject settingsJson = new JsonObject();
+                for (Setting s : module.getSettings()) {
+                    if (s instanceof BooleanSetting) settingsJson.addProperty(s.getName(), ((BooleanSetting)s).getValue());
+                    else if (s instanceof NumberSetting) settingsJson.addProperty(s.getName(), ((NumberSetting)s).getValue());
+                    else if (s instanceof ModeSetting) settingsJson.addProperty(s.getName(), ((ModeSetting)s).getValue());
+                }
+                moduleJson.add("settings", settingsJson);
                 modulesJson.add(module.getName(), moduleJson);
             }
             root.add("modules", modulesJson);
@@ -47,6 +56,17 @@ public class ConfigManager {
                         JsonObject moduleJson = modulesJson.getAsJsonObject(module.getName());
                         if (moduleJson.has("toggled") && moduleJson.get("toggled").getAsBoolean()) module.setToggled(true);
                         if (moduleJson.has("keybind")) module.setKeybind(moduleJson.get("keybind").getAsInt());
+                        
+                        if (moduleJson.has("settings")) {
+                            JsonObject sj = moduleJson.getAsJsonObject("settings");
+                            for (Setting s : module.getSettings()) {
+                                if (sj.has(s.getName())) {
+                                    if (s instanceof BooleanSetting) ((BooleanSetting)s).setValue(sj.get(s.getName()).getAsBoolean());
+                                    else if (s instanceof NumberSetting) ((NumberSetting)s).setValue(sj.get(s.getName()).getAsDouble());
+                                    else if (s instanceof ModeSetting) ((ModeSetting)s).setValue(sj.get(s.getName()).getAsString());
+                                }
+                            }
+                        }
                     }
                 }
             }

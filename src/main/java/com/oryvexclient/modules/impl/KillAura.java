@@ -2,6 +2,7 @@
 package com.oryvexclient.modules.impl;
 import com.oryvexclient.modules.Category;
 import com.oryvexclient.modules.Module;
+import com.oryvexclient.utils.NumberSetting;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -11,10 +12,14 @@ import org.lwjgl.input.Keyboard;
 import java.util.Comparator;
 
 public class KillAura extends Module {
-    public KillAura() { super("KillAura", "Attacks entities.", Keyboard.KEY_R, Category.COMBAT); }
+    private final NumberSetting range = new NumberSetting("Range", 4.5, 3.0, 6.0, 0.1);
+    public KillAura() { 
+        super("KillAura", "Attacks entities.", Keyboard.KEY_R, Category.COMBAT); 
+        addSetting(range);
+    }
     @Override public void onUpdate() {
         if (mc.thePlayer == null || mc.theWorld == null) return;
-        Entity target = mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().expand(4.5, 4.5, 4.5)).stream()
+        Entity target = mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().expand(range.getValue(), range.getValue(), range.getValue())).stream()
             .filter(e -> e instanceof EntityLivingBase && !(e instanceof EntityArmorStand) && e != mc.thePlayer && ((EntityLivingBase)e).getHealth() > 0)
             .min(Comparator.comparingDouble(e -> e.getDistanceToEntity(mc.thePlayer))).orElse(null);
         if (target == null) return;
@@ -25,7 +30,7 @@ public class KillAura extends Module {
         float yaw = (float) (Math.atan2(z, x) * 180.0 / Math.PI) - 90.0F;
         float pitch = (float) -(Math.atan2(y, dist) * 180.0 / Math.PI);
         mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(yaw, pitch, mc.thePlayer.onGround));
-        if (mc.thePlayer.getDistanceToEntity(target) <= 4.5f) {
+        if (mc.thePlayer.getDistanceToEntity(target) <= range.getValue()) {
             mc.playerController.attackEntity(mc.thePlayer, target);
             mc.thePlayer.swingItem();
         }

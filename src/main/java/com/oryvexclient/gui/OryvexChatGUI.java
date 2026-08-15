@@ -30,16 +30,32 @@ public class OryvexChatGUI extends GuiChat {
         String text = this.inputField.getText();
         suggestions.clear();
         if (!text.startsWith(".")) return;
-        String[] parts = text.substring(1).split(" ");
+        String[] parts = text.substring(1).split(" ", -1);
         if (parts.length == 0) return;
-        String current = parts[0].toLowerCase();
-        for (Command cmd : OryvexClient.getInstance().getCommandManager().getCommands()) {
-            if (cmd.getName().startsWith(current)) suggestions.add("." + cmd.getName());
-        }
-        if (parts.length >= 2 && parts[0].equalsIgnoreCase("bind")) {
-            String modulePart = parts[1].toLowerCase();
-            for (Module m : OryvexClient.getInstance().getModuleManager().getModules()) {
-                if (m.getName().toLowerCase().startsWith(modulePart)) suggestions.add("." + parts[0] + " " + m.getName());
+        String cmd = parts[0].toLowerCase();
+        
+        if (parts.length == 1) {
+            for (Command c : OryvexClient.getInstance().getCommandManager().getCommands()) {
+                if (c.getName().toLowerCase().startsWith(cmd)) suggestions.add("." + c.getName());
+            }
+        } else if (parts[0].equalsIgnoreCase("bind")) {
+            if (parts.length == 2) {
+                String modPart = parts[1].toLowerCase();
+                for (Module m : OryvexClient.getInstance().getModuleManager().getModules()) {
+                    if (m.getName().toLowerCase().startsWith(modPart)) suggestions.add(".bind " + m.getName());
+                }
+            } else if (parts.length == 3) {
+                String[] keys = {"R", "F", "C", "X", "Z", "V", "G", "RSHIFT", "NONE"};
+                for (String k : keys) {
+                    if (k.toLowerCase().startsWith(parts[2].toLowerCase())) suggestions.add(".bind " + parts[1] + " " + k);
+                }
+            }
+        } else if (parts[0].equalsIgnoreCase("toggle")) {
+            if (parts.length == 2) {
+                String modPart = parts[1].toLowerCase();
+                for (Module m : OryvexClient.getInstance().getModuleManager().getModules()) {
+                    if (m.getName().toLowerCase().startsWith(modPart)) suggestions.add(".toggle " + m.getName());
+                }
             }
         }
     }
@@ -49,10 +65,13 @@ public class OryvexChatGUI extends GuiChat {
         super.drawScreen(mouseX, mouseY, partialTicks);
         if (!suggestions.isEmpty()) {
             int y = this.height - 30 - (suggestions.size() * 12);
+            int maxW = 0;
+            for (String s : suggestions) maxW = Math.max(maxW, mc.fontRendererObj.getStringWidth(s));
+            drawRect(2, y - 2, maxW + 10, y + suggestions.size() * 12, 0xDD1E1E2E);
+            int sy = y;
             for (String s : suggestions) {
-                drawRect(2, y - 2, 10 + mc.fontRendererObj.getStringWidth(s), y + 10, 0xDD000000);
-                drawString(mc.fontRendererObj, s, 5, y, 0xFF89B4FA);
-                y += 12;
+                drawString(mc.fontRendererObj, s, 5, sy, 0xFF89B4FA);
+                sy += 12;
             }
         }
     }

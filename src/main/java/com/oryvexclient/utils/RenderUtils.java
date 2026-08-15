@@ -6,9 +6,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
 public class RenderUtils {
-    public static void drawRect(float x, float y, float w, float h, int color) {
-        net.minecraft.client.gui.Gui.drawRect((int)x, (int)y, (int)(x+w), (int)(y+h), color);
-    }
     public static void drawLine3D(double x1, double y1, double z1, double x2, double y2, double z2, float width, int color) {
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);

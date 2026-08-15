@@ -8,9 +8,12 @@ import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
 import java.awt.Color;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AltManagerGUI extends GuiScreen {
     private GuiScreen parent;
@@ -80,9 +83,26 @@ public class AltManagerGUI extends GuiScreen {
         try {
             Field sessionField = Minecraft.class.getDeclaredField("session");
             sessionField.setAccessible(true);
-            sessionField.set(mc, new Session(name, "0", "0", "mojang"));
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(sessionField, sessionField.getModifiers() & ~Modifier.FINAL);
+
+            Class<?> typeClass = Class.forName("net.minecraft.util.Session$Type");
+            Object legacyType = null;
+            for (Object c : typeClass.getEnumConstants()) {
+                if (c.toString().equalsIgnoreCase("LEGACY")) legacyType = c;
+            }
+            if (legacyType == null) legacyType = typeClass.getEnumConstants()[0];
+
+            Constructor<?> ctor = Class.forName("net.minecraft.util.Session").getConstructor(String.class, String.class, String.class, typeClass);
+            Object newSession = ctor.newInstance(name, UUID.randomUUID().toString(), "0", legacyType);
+            
+            sessionField.set(mc, newSession);
             statusMessage = "Logged in as " + name;
-        } catch (Exception e) { statusMessage = "Failed to change session."; }
+        } catch (Exception e) {
+            statusMessage = "Failed: " + e.getMessage();
+            e.printStackTrace();
+        }
     }
     @Override public void onGuiClosed() { Keyboard.enableRepeatEvents(false); }
 }
